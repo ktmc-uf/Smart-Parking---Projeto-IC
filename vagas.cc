@@ -1,6 +1,6 @@
 #include <LiquidCrystal_I2C.h>
 
-// ---- CONFIGURAÇÃO DOS PINOS ----
+// CONFIGURAÇÃO DOS PINOS
 #define trig1 4
 #define echo1 5
 #define trig2 9
@@ -11,16 +11,16 @@ int led1Verde = 2;
 int led2Verm = 11;
 int led2Verde = 12;
 
-// ---- VARIÁVEIS ----
+//VARIÁVEIS 
 int sensor1 = 0;
 int sensor2 = 0;
 int vagasocupadas = 0;
 int vagaslivres = 2;
 
-// ---- LCD ----
+// LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// ---- FUNÇÃO PARA LER SENSOR ULTRASSÔNICO ----
+// FUNÇÃO PARA LER SENSOR ULTRASSÔNICO
 long readUltrasonicDistance(int triggerPin, int echoPin) {
   digitalWrite(triggerPin, LOW);
   delayMicroseconds(2);
@@ -29,9 +29,9 @@ long readUltrasonicDistance(int triggerPin, int echoPin) {
   digitalWrite(triggerPin, LOW);
 
   long duration = pulseIn(echoPin, HIGH);
-  long distance = duration / 58; // Converte tempo → cm
+  long distance = duration / 58; // Converte tempo em cm
 
-  if (distance == 0) return 9999; // Falha de leitura
+  if (distance == 0) return 9999; // checar se está funcionando
   return distance;
 }
 
@@ -56,7 +56,7 @@ void setup() {
 
 void loop() {
 
-  // ---- LEITURA DOS SENSORES ----
+  // LEITURA DOS SENSORES
   long dist1 = readUltrasonicDistance(trig1, echo1);
   long dist2 = readUltrasonicDistance(trig2, echo2);
 
@@ -68,7 +68,7 @@ void loop() {
   Serial.print(dist2);
   Serial.println(" cm");
 
-  // ---- LÓGICA DO SENSOR 1 ----
+  // SENSOR 1
   if (dist1 > 1 && dist1 < 50) {
     digitalWrite(led1Verm, HIGH);
     digitalWrite(led1Verde, LOW);
@@ -79,7 +79,7 @@ void loop() {
     sensor1 = 0;
   }
 
-  // ---- LÓGICA DO SENSOR 2 ----
+  // SENSOR 2 
   if (dist2 > 1 && dist2 < 50) {
     digitalWrite(led2Verm, HIGH);
     digitalWrite(led2Verde, LOW);
@@ -90,11 +90,11 @@ void loop() {
     sensor2 = 0;
   }
 
-  // ---- CONTAGEM ----
+  // CONTAGEM DAS VAGAS
   vagasocupadas = sensor1 + sensor2;
   vagaslivres = 2 - vagasocupadas;
 
-  // ---- LCD ----
+  // LCD
   lcd.setCursor(0, 0);
   lcd.print("Vagas livres = ");
   lcd.print(vagaslivres);
